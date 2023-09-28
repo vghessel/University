@@ -1,17 +1,23 @@
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
+from django.http import FileResponse
+from django.conf import settings
 
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
+from rest_framework import viewsets
+from rest_framework.viewsets import ModelViewSet
 
 from .models import Users, UserType, Subject, UserAndSubject
 from .serializers import UsersSerializer
 
+import os
 import json
 
-
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def get_users(request):
 
     if request.method == 'GET':
@@ -68,4 +74,3 @@ def delete_user(request, id):
         return Response(status=status.HTTP_202_ACCEPTED)
     except:
         return Response(status=status.HTTP_404_NOT_FOUND)
-    

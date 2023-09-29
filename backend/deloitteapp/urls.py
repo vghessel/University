@@ -6,11 +6,13 @@ from . import views
 urlpatterns = [
 
     ## Student
-    path('student/', views.students, name='get_all_students'),
-    path('student/', views.students, name='create_student'),
-    path('student/<int:id>', views.students, name='get_student_by_id'),  
-    path('student/<int:id>', views.students, name='update_student'),
-    path('student/<int:id>', views.students, name='delete_student'),
+    path('', views.StudentListCreateAPIView.as_view(), name='student-list-create'),
+    path('<int:pk>/', views.StudentRetrieveUpdateDestroyAPIView.as_view(), name='student-retrieve-update-destroy'),
+
+    #path('', views.students, name='create_student'),
+    #path('<int:id>', views.students, name='get_student_by_id'),  
+    #path('<int:id>', views.students, name='update_student'),
+    #path('<int:id>', views.students, name='delete_student'),
 #
     ## Teacher
     #path('teacher/', views.get_all_teachers, name='get_all_teachers'),

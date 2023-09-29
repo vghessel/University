@@ -1,7 +1,7 @@
 from django.contrib import admin
-from .models import Users, UserType, Subject, UserAndSubject
+from .models import Student, Teacher, Subject, Grade
 
-admin.site.register(Users)
-admin.site.register(UserType)
+admin.site.register(Student)
+admin.site.register(Teacher)
 admin.site.register(Subject)
-admin.site.register(UserAndSubject)
+admin.site.register(Grade)

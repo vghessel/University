@@ -2,51 +2,51 @@ from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 from django.http import FileResponse
 from django.conf import settings
+from django.contrib.auth.models import User
 
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.permissions import IsAuthenticated
-from rest_framework import viewsets
-from rest_framework.viewsets import ModelViewSet
 
-from .models import Users, UserType, Subject, UserAndSubject
-from .serializers import UsersSerializer
+from .models import Student, Teacher, Subject, Grade
+from .serializers import StudentSerializer, TeacherSerializer, SubjectSerializer, GradeSerializer, UserSerializer
 
 import os
 import json
 
-@api_view(['GET'])
-@permission_classes([IsAuthenticated])
-def get_users(request):
 
+## Student CRUD ##
+
+@api_view(['GET'])
+#@permission_classes([IsAuthenticated])
+def get_all_students(request):
     if request.method == 'GET':
-        users = Users.objects.all()
-        serializer = UsersSerializer(users, many=True)
+        students = Student.objects.all()
+        serializer = StudentSerializer(students, many=True)
         return Response(serializer.data)
-    
+
     return Response(status=status.HTTP_404_NOT_FOUND)
 
 
 @api_view(['GET'])
-def get_by_id(request, id):
+def get_student_by_id(request, id):
     
     try:
-        user = Users.objects.get(pk=id)
+        student = Student.objects.get(id=id)
     except:
         return Response(status=status.HTTP_404_NOT_FOUND)
     
     if request.method == 'GET':
-        serializer = UsersSerializer(user)
+        serializer = StudentSerializer(student)
         return Response(serializer.data)
     
 
 @api_view(['POST'])
-def create_user(request):
+def create_student(request):
 
     if request.method == 'POST':
-        new_user = request.data
-        serializer = UsersSerializer(data=new_user)
+        new_student = request.data
+        serializer = StudentSerializer(data=new_student)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -55,9 +55,9 @@ def create_user(request):
 
 
 @api_view(['PUT'])
-def update_user(request, id):
-    user = Users.objects.get(pk=id)
-    serializer = UsersSerializer(user, data=request.data)
+def update_student(request, id):
+    student = Student.objects.get(id=id)
+    serializer = StudentSerializer(student, data=request.data)
 
     if serializer.is_valid():
         serializer.save()
@@ -67,10 +67,14 @@ def update_user(request, id):
 
 
 @api_view(['DELETE'])
-def delete_user(request, id):
+def delete_student(request, id):
     try:
-        user_to_delete = Users.objects.get(pk=id)
-        user_to_delete.delete()
+        student = Student.objects.get(id=id)
+        student.delete()
         return Response(status=status.HTTP_202_ACCEPTED)
     except:
         return Response(status=status.HTTP_404_NOT_FOUND)
+    
+
+
+## Teacher CRUD ##

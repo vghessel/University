@@ -1,4 +1,4 @@
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
@@ -17,7 +17,15 @@ class Student(models.Model):
 @receiver(post_save, sender=Student)
 def create_user_for_student(sender, instance, created, **kwargs):
     if created:
-        User.objects.create_user(username=instance.student_email, password=instance.student_password)
+        user = User.objects.create_user(
+            username=instance.student_email, 
+            email=instance.student_email,
+            password=instance.student_password,
+            first_name=instance.student_name
+        )
+        # Add user to group
+        group = Group.objects.get(name='student')
+        user.groups.add(group)
 
 
 ## Teacher Model ##
@@ -33,8 +41,15 @@ class Teacher(models.Model):
 @receiver(post_save, sender=Teacher)
 def create_user_for_teacher(sender, instance, created, **kwargs):
     if created:
-        User.objects.create_user(username=instance.teacher_name, password=instance.teacher_email)
-
+        user = User.objects.create_user(
+            username=instance.teacher_email, 
+            email=instance.teacher_email,
+            password=instance.teacher_password,
+            first_name=instance.teacher_name
+        )
+        # Add user to group
+        group = Group.objects.get(name='teacher')
+        user.groups.add(group)
 
 ## Subject Model ##
 class Subject(models.Model):

@@ -24,4 +24,7 @@ urlpatterns = [
     ## Get a student's subjects and grades
     path('student/<int:pk>/subjects-grades/', StudentSubjectsGradesAPIView.as_view(), name='student-subjects-grades'),
 
+    ## Get a teacher's subjects and students
+    path('teacher/<int:pk>/detail/', views.TeacherDetailView.as_view(), name='teacher-detail'),
+
 ]

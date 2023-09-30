@@ -2,7 +2,7 @@ from rest_framework import generics
 from rest_framework import status
 from rest_framework.response import Response
 from .models import Student, Teacher, Subject, Grade
-from .serializers import StudentSerializer, TeacherSerializer, SubjectSerializer, GradeSerializer
+from .serializers import StudentSerializer, TeacherSerializer, SubjectSerializer, GradeSerializer, GradeDetailSerializer, StudentDetailSerializer
 
 
 ## Student CRUD View ##
@@ -95,3 +95,13 @@ class GradeRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+
+## Get a student's subjects and grades ##
+class StudentSubjectsGradesAPIView(generics.RetrieveAPIView):
+    queryset = Student.objects.all()
+    serializer_class = StudentDetailSerializer
+
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        return Response(StudentDetailSerializer(instance).data)

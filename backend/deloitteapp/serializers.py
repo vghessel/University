@@ -28,5 +28,21 @@ class GradeSerializer(serializers.ModelSerializer):
         model = Grade
         fields = '__all__'
 
+class GradeDetailSerializer(serializers.ModelSerializer):
+    subject_name = serializers.CharField(source='subject_name.subject_name')
+    subject_workload = serializers.IntegerField(source='subject_name.subject_workload')
+    teacher_name = serializers.CharField(source='subject_name.teacher_name.teacher_name')
+
+    class Meta:
+        model = Grade
+        fields = ['subject_name', 'subject_workload', 'teacher_name', 'grade']  
+
+class StudentDetailSerializer(serializers.ModelSerializer):
+    grades = GradeDetailSerializer(source='grade_set', many=True)
+
+    class Meta:
+        model = Student
+        fields = ['id', 'student_name', 'student_email', 'grades']
+
 
 

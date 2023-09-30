@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.urls import path, include
-
+from .views import StudentSubjectsGradesAPIView
 from . import views
 
 urlpatterns = [
@@ -20,5 +20,8 @@ urlpatterns = [
     ## Grade
     path('grade/', views.GradeListCreateAPIView.as_view(), name='grade-list-create'),
     path('grade/<int:pk>/', views.GradeRetrieveUpdateDestroyAPIView.as_view(), name='grade-retrieve-update-destroy'),
+
+    ## Get a student's subjects and grades
+    path('student/<int:pk>/subjects-grades/', StudentSubjectsGradesAPIView.as_view(), name='student-subjects-grades'),
 
 ]

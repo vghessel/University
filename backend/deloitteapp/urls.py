@@ -14,7 +14,7 @@ urlpatterns = [
     path('teacher/<int:pk>/', views.TeacherRetrieveUpdateDestroyAPIView.as_view(), name='teacher-retrieve-update-destroy'),
 
     ## Subject
-    #path('subject/', views.get_all_subjects, name='get_all_subjects'),
-    #path('subject/', views.create_subject, name='create_subject'),
+    path('subject/', views.SubjectListCreateAPIView.as_view(), name='subject-list-create'),
+    path('subject/<int:pk>/', views.SubjectRetrieveUpdateDestroyAPIView.as_view(), name='subject-retrieve-update-destroy'),
 
 ]

@@ -30,21 +30,27 @@ class Teacher(models.Model):
     def __str__(self):
         return f'Name: {self.teacher_name} | Email: {self.teacher_email}'
 
-@receiver(post_save, sender=Student)
-def create_user_for_student(sender, instance, created, **kwargs):
+@receiver(post_save, sender=Teacher)
+def create_user_for_teacher(sender, instance, created, **kwargs):
     if created:
         User.objects.create_user(username=instance.teacher_name, password=instance.teacher_email)
 
 
 ## Subject Model ##
 class Subject(models.Model):
-    name = models.CharField(max_length=255)
-    teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE)
-    workload = models.IntegerField()
+    subject_name = models.CharField(max_length=255)
+    teacher_name = models.ForeignKey(Teacher, on_delete=models.CASCADE)
+    subject_workload = models.IntegerField()
 
+    def __str__(self):
+        return f'Subject: {self.subject_name} | Teacher: {self.teacher_name}'
+    
 
 ## Grade Model ##
 class Grade(models.Model):
-    student = models.ForeignKey(Student, on_delete=models.CASCADE)
-    subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
+    student_name = models.ForeignKey(Student, on_delete=models.CASCADE)
+    subject_name = models.ForeignKey(Subject, on_delete=models.CASCADE)
     grade = models.DecimalField(max_digits=5, decimal_places=2)
+
+    def __str__(self):
+        return f'Name: {self.student_name} | Subject: {self.subject_name} | Grade: {self.grade}'

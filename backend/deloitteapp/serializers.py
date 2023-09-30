@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .models import Student, Teacher, Subject, Grade
-from django.contrib.auth.models import User
+from django.contrib.auth.models import Group
 
 
 ## Serializer - ALL

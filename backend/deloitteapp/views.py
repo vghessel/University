@@ -1,5 +1,7 @@
 from rest_framework import status
 from rest_framework import generics
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -43,10 +45,13 @@ class CustomLoginView(APIView):
 
 ## Student CRUD View ##
 class StudentListCreateAPIView(generics.ListCreateAPIView):
+    #authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
     queryset = Student.objects.all()
     serializer_class = StudentSerializer
 
 class StudentRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [IsAuthenticated]
     queryset = Student.objects.all()
     serializer_class = StudentSerializer
 
@@ -66,10 +71,12 @@ class StudentRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView)
 
 ## Teacher CRUD View ##
 class TeacherListCreateAPIView(generics.ListCreateAPIView):
+    permission_classes = [IsAuthenticated]
     queryset = Teacher.objects.all()
     serializer_class = TeacherSerializer
 
 class TeacherRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [IsAuthenticated]
     queryset = Teacher.objects.all()
     serializer_class = TeacherSerializer
 
@@ -89,10 +96,12 @@ class TeacherRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView)
 
 ## Subject CRUD View ##
 class SubjectListCreateAPIView(generics.ListCreateAPIView):
+    permission_classes = [IsAuthenticated]
     queryset = Subject.objects.all()
     serializer_class = SubjectSerializer
 
 class SubjectRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [IsAuthenticated]
     queryset = Subject.objects.all()
     serializer_class = SubjectSerializer
 
@@ -112,10 +121,12 @@ class SubjectRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView)
 
 ## Grade CRUD View ##
 class GradeListCreateAPIView(generics.ListCreateAPIView):
+    permission_classes = [IsAuthenticated]
     queryset = Grade.objects.all()
     serializer_class = GradeSerializer
 
 class GradeRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [IsAuthenticated]
     queryset = Grade.objects.all()
     serializer_class = GradeSerializer
 
@@ -135,6 +146,7 @@ class GradeRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
 
 ## Get a student's subjects and grades ##
 class StudentSubjectsGradesAPIView(generics.RetrieveAPIView):
+    permission_classes = [IsAuthenticated]
     queryset = Student.objects.all()
     serializer_class = StudentDetailSerializer
 
@@ -145,5 +157,6 @@ class StudentSubjectsGradesAPIView(generics.RetrieveAPIView):
 
 ## Get a teacher's subjects and students ##
 class TeacherDetailView(generics.RetrieveAPIView):
+    permission_classes = [IsAuthenticated]
     queryset = Teacher.objects.all()
     serializer_class = TeacherDetailSerializer

@@ -54,7 +54,7 @@ def create_user_for_teacher(sender, instance, created, **kwargs):
 ## Subject Model ##
 class Subject(models.Model):
     subject_name = models.CharField(max_length=255)
-    teacher_name = models.ForeignKey(Teacher, on_delete=models.CASCADE)
+    teacher_name = models.OneToOneField(Teacher, on_delete=models.CASCADE, default='')
     subject_workload = models.IntegerField()
 
     def __str__(self):

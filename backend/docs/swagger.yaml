@@ -554,6 +554,9 @@ components:
         teacher-email:
           type: string
           example: example@gmail.com
+        subject:
+          type: string
+          example: DevOps
         students:
           type: array
           items:
@@ -564,7 +567,7 @@ components:
                 type: integer
                 format: int64
                 example: 1
-              student-name: 
+              student_name: 
                 type: string
                 example: Wendell
               grade:

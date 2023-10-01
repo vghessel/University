@@ -27,31 +27,31 @@ class GradeSerializer(serializers.ModelSerializer):
 
 ## Serializer - Customize
 # Serialize students' grades from a single teacher's subjects
-class StudentNameSerializer(serializers.ModelSerializer):
+class StudentTeacherSerializer(serializers.ModelSerializer):
     class Meta:
         model = Student
-        fields = ['student_name']
+        fields = ('id', 'student_name', 'student_email')
 
-class GradeStudentSerializer(serializers.ModelSerializer):
-    student_name = serializers.CharField(source='student_name.student_name')
+class GradeTeacherSerializer(serializers.ModelSerializer):
+    student = StudentSerializer()
 
     class Meta:
         model = Grade
-        fields = ['id', 'student_name', 'grade']
+        fields = ('student', 'grade')
 
-class SubjectStudentSerializer(serializers.ModelSerializer):
-    students = GradeStudentSerializer(many=True, source='grade_set')
+class SubjectDetailSerializer(serializers.ModelSerializer):
+    students = GradeSerializer(source='grade_set', many=True)
 
     class Meta:
         model = Subject
-        fields = ['id', 'subject_name', 'students']
+        fields = ('id', 'subject_name', 'students')
 
 class TeacherDetailSerializer(serializers.ModelSerializer):
-    subjects = SubjectStudentSerializer(many=True, source='subject_set')
+    subject = SubjectDetailSerializer()
 
     class Meta:
         model = Teacher
-        fields = ['id', 'teacher_name', 'teacher_email', 'subjects']
+        fields = ('id', 'teacher_name', 'teacher_email', 'subject')
 
 
 # Serialize the subjects and grades of a single student

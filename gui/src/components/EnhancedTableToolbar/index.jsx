@@ -1,4 +1,3 @@
-import { alpha } from '@mui/material/styles';
 import PropTypes from 'prop-types';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
@@ -8,7 +7,6 @@ import AddIcon from '@mui/icons-material/Add';
 import ClearIcon from '@mui/icons-material/Clear';
 import InputAdornment from '@mui/material/InputAdornment';
 import TextField from '@mui/material/TextField';
-import _ from 'lodash';
 
 export default function EnhancedTableToolbar(props) {
   const {
@@ -19,7 +17,8 @@ export default function EnhancedTableToolbar(props) {
     search,
     editMode,
     setEditMode,
-    label
+    label,
+    hideAdd
   } = props;
 
   return (
@@ -48,19 +47,21 @@ export default function EnhancedTableToolbar(props) {
           ),
         }}
       />
-      <Tooltip>
-        <IconButton
-          disabled={editMode}
-          onClick={() => {
-            setEditMode(true);
-            setIsNew(true);
-            setAddingNew(true);
-            reset();
-          }}
-        >
-          <AddIcon />
-        </IconButton>
-      </Tooltip>
+      {!hideAdd &&
+        <Tooltip>
+          <IconButton
+            disabled={editMode}
+            onClick={() => {
+              setEditMode(true);
+              setIsNew(true);
+              setAddingNew(true);
+              reset();
+            }}
+          >
+            <AddIcon />
+          </IconButton>
+        </Tooltip>
+      }
     </Toolbar>
   );
 }
@@ -73,4 +74,5 @@ EnhancedTableToolbar.propTypes = {
   search: PropTypes.string,
   editMode: PropTypes.bool,
   setEditMode: PropTypes.func,
+  hideAdd: PropTypes.bool,
 };

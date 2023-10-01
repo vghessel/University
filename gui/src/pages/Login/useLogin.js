@@ -5,6 +5,8 @@ import md5 from "js-md5";
 import { useUser } from '../../context/UserStore';
 import { LOGIN } from '../../services/connection'
 
+const ROTAS = ['/', '/student', '/teacher', '/admin']
+
 export default () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
@@ -49,7 +51,7 @@ export default () => {
       loggedIn: true
     }
     changeLoggedInUser(user)
-    return navigate('/')
+    return navigate(ROTAS[user.level])
     /* }
     catch (error) {
       return setErrorInLogin('Error trying to login, please try again.')

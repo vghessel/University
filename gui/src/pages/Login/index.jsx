@@ -29,7 +29,7 @@ export default function Login() {
     <Style.Container>
       <Style.Left>
         <Style.LeftContainer>
-          <Logo height="100px" />
+          <Logo height="40px" />
           <div className='text'>
             <h1 className='title'>Bem vindo a universidade Delloite!</h1>
           </div>

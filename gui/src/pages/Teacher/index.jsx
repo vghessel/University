@@ -23,30 +23,30 @@ const headCells = [
 export default function Student() {
   return (
     <>
-    <PageBase
-      toolBar={<EnhancedTableToolbar label={`Alunos da matéria: ${true}`} hideAdd />}
-      tableHeader={
-        <EnhachedTableHead
-          order={'order'}
-          orderBy={'orderBy'}
-          rowCount={0}
-          onRequestSort={() => null}
-          headCells={headCells}
-          noActions
-        />
-      }
-    >
-      <TableRow
-        hover
-        key={1}
+      <PageBase
+        toolBar={<EnhancedTableToolbar label={`Alunos da matéria: ${true}`} hideAdd />}
+        tableHeader={
+          <EnhachedTableHead
+            order={'order'}
+            orderBy={'orderBy'}
+            rowCount={0}
+            onRequestSort={() => null}
+            headCells={headCells}
+            noActions
+          />
+        }
       >
-        <TableCell>Matemática</TableCell>
-        <TableCell style={{ width: '100px' }}>
-          <Grade initialValue={10} />
-        </TableCell>
-      </TableRow>
-    </PageBase>
-    
+        <TableRow
+          hover
+          key={1}
+        >
+          <TableCell>Matemática</TableCell>
+          <TableCell style={{ width: '100px' }}>
+            <Grade initialValue={10} />
+          </TableCell>
+        </TableRow>
+      </PageBase>
+
 
       <Typography style={{ paddingLeft: '20px', paddingRight: '20px' }} variant="caption" display="block">
         * clique 2 vezes para editar a nota

@@ -44,7 +44,7 @@ export default () => {
     // try {
     //  await LOGIN.post("security/login", payload)
     const user = {
-      level: 2,
+      level: 3,
       id: 1, 
       name: 'Wendell',
       apiKey: '',

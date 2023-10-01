@@ -16,7 +16,7 @@ class TeacherSerializer(serializers.ModelSerializer):
 
 class SubjectSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Teacher
+        model = Subject
         fields = '__all__'
 
 class GradeSerializer(serializers.ModelSerializer):
@@ -62,7 +62,7 @@ class GradeDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Grade
-        fields = ['subject_name', 'subject_workload', 'teacher_name', 'grade']  
+        fields = ['id', 'subject_name', 'subject_workload', 'teacher_name', 'grade']  
 
 class StudentDetailSerializer(serializers.ModelSerializer):
     grades = GradeDetailSerializer(source='grade_set', many=True)

@@ -152,6 +152,31 @@ paths:
       responses:
         '400':
           description: Invalid student value
+  /student/{studentId}/subjects:
+    get:
+      tags:
+        - student
+      summary: Find a student's subjects and grades by ID
+      description: Returns the student's data with the subjects and their respective grades.
+      parameters:
+        - name: studentId
+          in: path
+          description: ID of student to return
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StudentSubjects'          
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Student not found
   /teacher:
     get:
       tags:
@@ -278,6 +303,31 @@ paths:
       responses:
         '400':
           description: Invalid teacher value
+  /teacher/{teacherId}/subjects:
+    get:
+      tags:
+        - teacher
+      summary: Find the teacher, their subjects and students
+      description: Returns data about the teacher, their subjects and students in each subject.
+      parameters:
+        - name: teacherId
+          in: path
+          description: ID of teacher to return
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TeacherStudents'          
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Student not found
   /subject:
     get:
       tags:
@@ -413,36 +463,63 @@ components:
         id:
           type: integer
           format: int64
-          example: 10
-        name:
+          example: 1
+        student_name:
           type: string
-          example: John
-        email:
+          example: Vinicius
+        student_email:
           type: string
           example: example@gmail.com
-        birth-date:
+        student_birth_date:
           type: string
           format: date-time
-        password:
+          example: 1998-10-07
+        student_password:
           type: string
-        subjects:
+    StudentSubjects:
+      type: object
+      required: [id]
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 1
+        student_name:
+          type: string
+          example: Vinicius
+        student_email:
+          type: string
+          example: example@gmail.com
+        student_birth_date:
+          type: string
+          format: date-time
+          example: 1998-10-07
+        student_password:
+          type: string
+        grades:
           type: array
           items:
             type: object
             required: [subject-id]
             properties:
-              subject-id:
+              id:
                 type: integer
                 format: int64
-                example: 10
-              subject-name: 
+                example: 1
+              subject_name: 
                 type: string
-              subject-workload:
+                example: Math
+              subject_workload:
                 type: integer
                 format: int32
+                example: 40
+              teacher_name:
+                type: string
+                example: Wendell
               grade:
                 type: number
                 format: float
+                example: 10
     Teacher:
       type: object
       required: [id]
@@ -451,47 +528,49 @@ components:
           type: integer
           format: int64
           example: 10
-        name:
+        teacher_name:
           type: string
-          example: John
-        email:
+          example: Vinicius
+        teacher_email:
           type: string
           example: example@gmail.com
-        birth-date:
+        teacher_birth_date:
           type: string
+          example: 1998-10-07
           format: date-time
-        password:
+        teacher_password:
           type: string
-        subjects:
+    TeacherStudents:
+      type: object
+      required: [id]
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 1
+        teacher_name:
+          type: string
+          example: Vinicius
+        teacher-email:
+          type: string
+          example: example@gmail.com
+        students:
           type: array
           items:
             type: object
-            required: [subject-id]
+            required: [student-id]
             properties:
-              subject-id:
+              id:
                 type: integer
                 format: int64
-                example: 10
-              subject-name: 
+                example: 1
+              student-name: 
                 type: string
-              subject-workload:
-                type: integer
-                format: int32
-              students:
-                type: array
-                items:
-                  type: object
-                  required: [student-id]
-                  properties:
-                    student-id:
-                      type: integer
-                      format: int64
-                      example: 10
-                    student-name: 
-                      type: string
-                    grade:
-                      type: number
-                      format: float
+                example: Wendell
+              grade:
+                type: number
+                format: float
+                example: 10
     Subject:
       type: object
       required: [id]
@@ -499,31 +578,16 @@ components:
         id:
           type: integer
           format: int64
-          example: 10
-        name:
+          example: 1
+        subject_name:
           type: string
-          example: John
-        teacher-id:
+          example: Math
+        subject_workload:
           type: integer
           format: int32
-          example: example@gmail.com
-        workload:
-          type: integer
-          format: int32
-        students:
-          type: array
-          items:
-            type: object
-            required: [student-id]
-            properties:
-              student-id:
-                type: integer
-                format: int64
-                example: 10
-              student-name: 
-                type: string
-              grade:
-                type: number
-                format: float
+          example: 40
+        teacher_name:
+          type: string
+          example: Vinicius
               
       

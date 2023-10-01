@@ -2,7 +2,7 @@ import TableRow from '@mui/material/TableRow';
 import TableCell from '@mui/material/TableCell';
 import _ from 'lodash';
 import EnhancedTableToolbar from '../../components/EnhancedTableToolbar';
-import EnhancedTableHead from '../../components/EnhachedTableHead';
+import EnhachedTableHead from '../../components/EnhachedTableHead';
 import PageBase from '../../components/PageBase'
 const headCells = [
   {
@@ -35,7 +35,7 @@ export default function Student() {
     <PageBase
       toolBar={<EnhancedTableToolbar label="Notas" hideAdd />}
       tableHeader={
-        <EnhancedTableHead
+        <EnhachedTableHead
           order={'order'}
           orderBy={'orderBy'}
           rowCount={0}

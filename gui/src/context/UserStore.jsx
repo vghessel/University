@@ -16,7 +16,7 @@ function UserProvider({ children }) {
 
   const logout = async () => {
     try {
-      await API.delete('security/logout');
+      await API.delete('logout');
       setLoggedInUser(null);
     } catch (err) {
       setLoggedInUser(null);

@@ -35,6 +35,7 @@ class CustomLoginView(APIView):
                 'access_token': access_token,
                 'user_id': user.id,  # Adicione o 'id' do usuário
                 'username': user.username,
+                'name': user.first_name,
                 'groups': [{'id': group[0], 'name': group[1]} for group in groups],  # Adicione 'id' do grupo
             }, status=status.HTTP_200_OK)
         else:

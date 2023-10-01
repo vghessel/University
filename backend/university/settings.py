@@ -148,3 +148,4 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # To allow access to Vue.js
 CORS_ORIGIN_ALLOW_ALL = True
+ALLOWED_HOSTS = ['*']

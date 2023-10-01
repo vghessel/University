@@ -26,6 +26,7 @@ export default function Grade({ initialValue }) {
           fullWidth
           autoFocus
           size="small"
+          type="number"
         />
       ) : (
         <span>{value}</span>

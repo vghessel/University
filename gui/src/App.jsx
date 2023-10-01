@@ -5,7 +5,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 
 import Student from './pages/Student';
 import Teacher from './pages/Teacher';
-import Admin from './pages/Admin';
+import AdminHome from './pages/AdminHome';
 import Login from './pages/Login';
 import Navbar from './components/NavBar';
 import { useUser } from './context/UserStore';
@@ -22,7 +22,7 @@ function App() {
             <Routes>
               <Route path='/student' element={<Student />} />
               <Route path='/teacher' element={<Teacher />} />
-              <Route path='/admin' element={<Admin />} />
+              <Route path='/admin' element={<AdminHome />} />
               <Route path='/' element={<Login />} />
               <Route path='*' element={<Navigate to='/' replace />} />
             </Routes>

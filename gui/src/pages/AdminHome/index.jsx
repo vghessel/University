@@ -1,12 +1,12 @@
-import * as React from 'react';
+import { useState } from 'react';
 import SwipeableViews from 'react-swipeable-views';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-import School from '@mui/icons-material';
-import LocalLibrary from '@mui/icons-material';
-import Article from '@mui/icons-material';
+import School from '@mui/icons-material/School';
+import LocalLibrary from '@mui/icons-material/LocalLibrary';
+import Article from '@mui/icons-material/Article';
 
 
 function TabPanel(props) {
@@ -28,8 +28,8 @@ function TabPanel(props) {
     </div>
   );
 }
-export default function Admin() {
-  const [value, setValue] = React.useState(0);
+export default function AdminHome() {
+  const [value, setValue] = useState(0);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);

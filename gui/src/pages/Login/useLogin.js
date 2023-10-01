@@ -1,15 +1,15 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
-import md5 from "js-md5";
+import _ from 'lodash'
 
 import { useUser } from '../../context/UserStore';
-import { LOGIN } from '../../services/connection'
+import { API } from '../../services/connection'
 
 const ROTAS = ['/', '/student', '/teacher', '/admin']
 
 export default () => {
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
+  const [username, setUsername] = useState('v@gmail.com')
+  const [password, setPassword] = useState('1234')
 
   const [errorInLogin, setErrorInLogin] = useState('')
 
@@ -34,28 +34,26 @@ export default () => {
   const login = async () => {
     if (!username.length || !password.length) return null
 
-    const passwordHash = md5(password);
-
     const payload = {
-      user: username,
-      password: passwordHash,
+      username: username,
+      password: password,
     };
 
-    // try {
-    //  await LOGIN.post("security/login", payload)
-    const user = {
-      level: 3,
-      id: 1, 
-      name: 'Wendell',
-      apiKey: '',
-      loggedIn: true
+    try {
+      const { data } = await API.post("/login/", payload)
+      const user = {
+        level: _.get(data,'groups[0].id', 1),
+        id: data.user_id,
+        name: data.name,
+        apiKey: data.access_token,
+        loggedIn: true
+      }
+      changeLoggedInUser(user)
+      return navigate(ROTAS[user.level])
     }
-    changeLoggedInUser(user)
-    return navigate(ROTAS[user.level])
-    /* }
     catch (error) {
       return setErrorInLogin('Error trying to login, please try again.')
-    } */
+    }
   }
 
   return {

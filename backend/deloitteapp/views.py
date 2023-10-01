@@ -28,16 +28,33 @@ class CustomLoginView(APIView):
             refresh = RefreshToken.for_user(user)
             access_token = str(refresh.access_token)
 
-            # Obtenha os grupos do usuário
+            # Get group data
             groups = Group.objects.filter(user=user).values_list('id', 'name')
-            
-            return Response({
+
+            response_data = {
                 'access_token': access_token,
-                'user_id': user.id,  # Adicione o 'id' do usuário
+                'user_id': user.id,
                 'username': user.username,
-                'name': user.first_name,
-                'groups': [{'id': group[0], 'name': group[1]} for group in groups],  # Adicione 'id' do grupo
-            }, status=status.HTTP_200_OK)
+                'groups': [{'id': group[0], 'name': group[1]} for group in groups],
+            }
+
+            # Check if the user is a student
+            if user.groups.filter(name='student').exists():
+                try:
+                    student = Student.objects.get(student_email=user.email)
+                    student_serializer = StudentSerializer(student)
+                    response_data['student'] = student_serializer.data
+                except Student.DoesNotExist:
+                    pass
+            # Check if the user is a teacher
+            if user.groups.filter(name='teacher').exists():
+                try:
+                    teacher = Teacher.objects.get(teacher_email=user.email)
+                    teacher_serializer = TeacherSerializer(teacher)
+                    response_data['teacher'] = teacher_serializer.data
+                except Teacher.DoesNotExist:
+                    pass
+            return Response(response_data, status=status.HTTP_200_OK)
         else:
             return Response({'detail': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
 

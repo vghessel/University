@@ -10,10 +10,11 @@ import parseISO from 'date-fns/parseISO';
 import EnhancedTableToolbar from '../../components/EnhancedTableToolbar';
 import EnhachedTableHead from '../../components/EnhachedTableHead';
 import PageBase from '../../components/PageBase'
+import PersonForm from '../../components/PersonForm';
+import DeleteConfirmation from '../../components/DeleteConfirmation';
 
 import { API } from '../../services/connection'
 import { useUser } from '../../context/UserStore';
-
 const headCells = [
   {
     id: 'student_name',
@@ -43,7 +44,8 @@ export default function AdminStudent() {
   const [orderBy, setOrderBy] = useState('student_name');
   const [search, setSearch] = useState();
   const [filteredStudents, setFilteredStudents] = useState([]);
-  const [isNew, setIsNew] = useState(false);
+  const [isNew, setIsNew] = useState(null);
+  const [deleteItem, setDeleteItem] = useState(null)
 
   const getStudents = async () => {
     setLoading(true)
@@ -59,6 +61,49 @@ export default function AdminStudent() {
       console.warn(err)
     } finally {
       setLoading(false);
+    }
+  }
+  const saveStudents = async (newData) => {
+    const payload ={
+      student_name: newData.name,
+      student_email: newData.email,
+      student_password: newData.password,
+      student_birth_date: format(newData.birth_date, 'yyyy-MM-dd')
+    }
+    try {
+      if(newData.id) {
+        await API.put(`/student/${newData.id}/`, payload, {
+          headers: {
+            Authorization: `Bearer ${_.get(loggedInUser, 'apiKey')}`,
+          }
+        });
+      } else {
+        await API.post('/student/', payload, {
+          headers: {
+            Authorization: `Bearer ${_.get(loggedInUser, 'apiKey')}`,
+          }
+        });
+      }
+      getStudents();
+    } catch (err) {
+      console.warn(err)
+    } finally {
+      setIsNew(null)
+    }
+  }
+
+  const deleteStudent = async () => {
+    try {
+      await API.delete(`/student/${deleteItem.id}/`, {
+        headers: {
+          Authorization: `Bearer ${_.get(loggedInUser, 'apiKey')}`,
+        }
+      });
+      getStudents();
+    } catch (err) {
+      console.warn(err)
+    } finally {
+      setDeleteItem(null)
     }
   }
   const doSearchStudents = (text) => {
@@ -82,7 +127,7 @@ export default function AdminStudent() {
   useEffect(() => {
     getStudents();
   }, []);
-
+  console.warn('delete', deleteItem)
   return (
     <PageBase
       loading={loading}
@@ -92,7 +137,9 @@ export default function AdminStudent() {
           label="Professores"
           search={search}
           doSearch={doSearchStudents}
-          setIsNew={setIsNew}
+          setIsNew={() => setIsNew({
+            id: null
+          })}
         />
       }
       tableHeader={
@@ -104,7 +151,20 @@ export default function AdminStudent() {
         />
       }
     >
-      {//isNew &&
+      {isNew &&
+        <PersonForm
+          title="Aluno"
+          handleClose={() => setIsNew(null)}
+          data={isNew}
+          onSave={saveStudents}
+        />
+      }
+      {deleteItem &&
+        <DeleteConfirmation
+          handleClose={() => setDeleteItem(null)}
+          deleteItem={deleteItem.student_name}
+          onDelete={deleteStudent}
+        />
       }
       {_.map(_.orderBy(filteredStudents, orderBy, order), student => (
         <TableRow
@@ -116,12 +176,17 @@ export default function AdminStudent() {
           <TableCell>{student.student_email}</TableCell>
           <TableCell>
             <IconButton
-              onClick={() => null}
+              onClick={() => setIsNew({
+                id: student.id,
+                name: student.student_name,
+                email: student.student_email,
+                birth_date: parseISO(student.student_birth_date)
+              })}
             >
               <EditIcon />
             </IconButton>
             <IconButton
-              onClick={() => null}
+              onClick={() => setDeleteItem(student)}
             >
               <DeleteIcon />
             </IconButton>
@@ -130,10 +195,7 @@ export default function AdminStudent() {
       ))
       }
       {(filteredStudents || []).length === 0 &&
-        <TableRow
-          hover
-          key={1}
-        >
+        <TableRow>
           <TableCell colSpan={4}>Nenhum aluno encontrado</TableCell>
         </TableRow>
       }

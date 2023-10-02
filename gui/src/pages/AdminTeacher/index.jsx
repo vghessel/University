@@ -10,6 +10,8 @@ import parseISO from 'date-fns/parseISO';
 import EnhancedTableToolbar from '../../components/EnhancedTableToolbar';
 import EnhachedTableHead from '../../components/EnhachedTableHead';
 import PageBase from '../../components/PageBase'
+import PersonForm from '../../components/PersonForm';
+import DeleteConfirmation from '../../components/DeleteConfirmation';
 
 import { API } from '../../services/connection'
 import { useUser } from '../../context/UserStore';
@@ -43,6 +45,7 @@ export default function AdminTeacher() {
   const [search, setSearch] = useState();
   const [filteredTeachers, setFilteredTeachers] = useState([]);
   const [isNew, setIsNew] = useState(false);
+  const [deleteItem, setDeleteItem] = useState(null)
 
   const getTeachers = async () => {
     setLoading(true)
@@ -58,6 +61,48 @@ export default function AdminTeacher() {
       console.warn(err)
     } finally {
       setLoading(false);
+    }
+  }
+  const saveTeachers = async (newData) => {
+    const payload = {
+      teacher_name: newData.name,
+      teacher_email: newData.email,
+      teacher_password: newData.password,
+      teacher_birth_date: format(newData.birth_date, 'yyyy-MM-dd')
+    }
+    try {
+      if (newData.id) {
+        await API.put(`/teacher/${newData.id}/`, payload, {
+          headers: {
+            Authorization: `Bearer ${_.get(loggedInUser, 'apiKey')}`,
+          }
+        });
+      } else {
+        await API.post('/teacher/', payload, {
+          headers: {
+            Authorization: `Bearer ${_.get(loggedInUser, 'apiKey')}`,
+          }
+        });
+      }
+      getTeachers();
+    } catch (err) {
+      console.warn(err)
+    } finally {
+      setIsNew(null)
+    }
+  }
+  const deleteTeacher = async () => {
+    try {
+      await API.delete(`/teacher/${deleteItem.id}/`, {
+        headers: {
+          Authorization: `Bearer ${_.get(loggedInUser, 'apiKey')}`,
+        }
+      });
+      getTeachers();
+    } catch (err) {
+      console.warn(err)
+    } finally {
+      setDeleteItem(null)
     }
   }
   const doSearchTeachers = (text) => {
@@ -90,7 +135,9 @@ export default function AdminTeacher() {
           label="Professores"
           search={search}
           doSearch={doSearchTeachers}
-          setIsNew={setIsNew}
+          setIsNew={() => setIsNew({
+            id: null
+          })}
         />
       }
       tableHeader={
@@ -102,7 +149,21 @@ export default function AdminTeacher() {
         />
       }
     >
-      {//isNew &&
+      {isNew &&
+
+        <PersonForm
+          title="Professor"
+          handleClose={() => setIsNew(null)}
+          data={isNew}
+          onSave={saveTeachers}
+        />
+      }
+      {deleteItem &&
+        <DeleteConfirmation
+          handleClose={() => setDeleteItem(null)}
+          deleteItem={deleteItem.teacher_name}
+          onDelete={deleteTeacher}
+        />
       }
       {_.map(_.orderBy(filteredTeachers, orderBy, order), teacher => (
         <TableRow
@@ -114,12 +175,17 @@ export default function AdminTeacher() {
           <TableCell>{teacher.teacher_email}</TableCell>
           <TableCell>
             <IconButton
-              onClick={() => null}
+              onClick={() => setIsNew({
+                id: teacher.id,
+                name: teacher.teacher_name,
+                email: teacher.teacher_email,
+                birth_date: parseISO(teacher.teacher_birth_date)
+              })}
             >
               <EditIcon />
             </IconButton>
             <IconButton
-              onClick={() => null}
+              onClick={() => setDeleteItem(teacher)}
             >
               <DeleteIcon />
             </IconButton>
@@ -128,11 +194,8 @@ export default function AdminTeacher() {
       ))
       }
       {(filteredTeachers || []).length === 0 &&
-        <TableRow
-          hover
-          key={1}
-        >
-          <TableCell colSpan={4}>Nenhuma professor encontrado</TableCell>
+        <TableRow>
+          <TableCell colSpan={4}>Nenhum professor encontrado</TableCell>
         </TableRow>
       }
     </PageBase>

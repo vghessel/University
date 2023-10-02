@@ -7,7 +7,9 @@ import EditIcon from '@mui/icons-material/Edit';
 import _ from 'lodash';
 import EnhancedTableToolbar from '../../components/EnhancedTableToolbar';
 import EnhachedTableHead from '../../components/EnhachedTableHead';
-import PageBase from '../../components/PageBase'
+import PageBase from '../../components/PageBase';
+import SubjectForm from '../../components/SubjectForm';
+import DeleteConfirmation from '../../components/DeleteConfirmation';
 
 import { API } from '../../services/connection'
 import { useUser } from '../../context/UserStore';
@@ -43,6 +45,7 @@ export default function AdminStudent() {
   const [search, setSearch] = useState();
   const [filteredSubjects, setFilteredSubjects] = useState([]);
   const [isNew, setIsNew] = useState(false);
+  const [deleteItem, setDeleteItem] = useState(null);
 
   const getTeachers = async () => {
     setLoading(true)
@@ -83,6 +86,47 @@ export default function AdminStudent() {
       setLoading(false);
     }
   }
+  const saveSubjects= async (newData) => {
+    const payload = {
+      subject_name: newData.name,
+      subject_workload: newData.workload,
+      teacher_name: newData.teacher_id,
+    }
+    try {
+      if (newData.id) {
+        await API.put(`/subject/${newData.id}/`, payload, {
+          headers: {
+            Authorization: `Bearer ${_.get(loggedInUser, 'apiKey')}`,
+          }
+        });
+      } else {
+        await API.post('/subject/', payload, {
+          headers: {
+            Authorization: `Bearer ${_.get(loggedInUser, 'apiKey')}`,
+          }
+        });
+      }
+      getSubjects();
+    } catch (err) {
+      console.warn(err)
+    } finally {
+      setIsNew(null)
+    }
+  }
+  const deleteSubject = async () => {
+    try {
+      await API.delete(`/subject/${deleteItem.id}/`, {
+        headers: {
+          Authorization: `Bearer ${_.get(loggedInUser, 'apiKey')}`,
+        }
+      });
+      getSubjects();
+    } catch (err) {
+      console.warn(err)
+    } finally {
+      setDeleteItem(null)
+    }
+  }
   const doSearchSubjects = (text) => {
     setSearch(text);
     const filtered = _.filter(
@@ -117,7 +161,9 @@ export default function AdminStudent() {
           label="Matérias"
           search={search}
           doSearch={doSearchSubjects}
-          setIsNew={setIsNew}
+          setIsNew={() => setIsNew({
+            id: null
+          })}
         />
       }
       tableHeader={
@@ -129,7 +175,19 @@ export default function AdminStudent() {
         />
       }
     >
-      {//isNew &&
+      {isNew &&
+        <SubjectForm
+          handleClose={() => setIsNew(null)}
+          data={isNew}
+          onSave={saveSubjects}
+        />
+      }
+      {deleteItem &&
+        <DeleteConfirmation
+          handleClose={() => setDeleteItem(null)}
+          deleteItem={deleteItem.subject_name}
+          onDelete={deleteSubject}
+        />
       }
       {_.map(_.orderBy(filteredSubjects, orderBy, order), subject => (
         <TableRow
@@ -141,12 +199,17 @@ export default function AdminStudent() {
           <TableCell>{subject.teacher_name}</TableCell>
           <TableCell>
             <IconButton
-              onClick={() => null}
+               onClick={() => setIsNew({
+                id: subject.id,
+                name: subject.subject_name,
+                workload: subject.subject_workload,
+                teacher_id: subject.teacher_id
+              })}
             >
               <EditIcon />
             </IconButton>
             <IconButton
-              onClick={() => null}
+              onClick={() => setDeleteItem(subject)}
             >
               <DeleteIcon />
             </IconButton>
@@ -155,10 +218,7 @@ export default function AdminStudent() {
       ))
       }
       {(filteredSubjects || []).length === 0 &&
-        <TableRow
-          hover
-          key={1}
-        >
+        <TableRow>
           <TableCell colSpan={4}>Nenhuma matéria encontrado</TableCell>
         </TableRow>
       }

@@ -150,7 +150,6 @@ export default function AdminTeacher() {
       }
     >
       {isNew &&
-
         <PersonForm
           title="Professor"
           handleClose={() => setIsNew(null)}

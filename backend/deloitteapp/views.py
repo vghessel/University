@@ -6,7 +6,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate
-from .models import Student, Teacher, Subject, Grade, Group
+from .models import Student, Teacher, Subject, Grade, Group, User
 from .serializers import (
     StudentSerializer, 
     TeacherSerializer, 
@@ -81,12 +81,16 @@ class StudentRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView)
 
     def put(self, request, *args, **kwargs):
         instance = self.get_object()
-        serializer = StudentSerializer(instance, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
+        serializer = self.get_serializer(instance, data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+
+        # Update User Model
+        user = User.objects.get(username=instance.student_email)
+        user.first_name = instance.student_name
+        user.set_password(instance.student_password)  # Use set_password para definir a senha corretamente
+        user.save()
+        return Response(serializer.data)
 
 ## Teacher CRUD View ##
 class TeacherListCreateAPIView(generics.ListCreateAPIView):
@@ -106,11 +110,16 @@ class TeacherRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView)
 
     def put(self, request, *args, **kwargs):
         instance = self.get_object()
-        serializer = TeacherSerializer(instance, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        serializer = self.get_serializer(instance, data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+
+        # Update User Model
+        user = User.objects.get(username=instance.teacher_email)
+        user.first_name = instance.teacher_name
+        user.set_password(instance.teacher_password)
+        user.save()
+        return Response(serializer.data)
     
 
 ## Subject CRUD View ##

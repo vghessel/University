@@ -59,7 +59,6 @@ export default function Login() {
               endAdornment={
                 <InputAdornment position='end'>
                   <IconButton
-                    aria-label='toggle password visibility'
                     onClick={handleClickShowPassword}
                     edge='end'
                   >

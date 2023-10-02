@@ -11,12 +11,8 @@ import TextField from '@mui/material/TextField';
 export default function EnhancedTableToolbar(props) {
   const {
     setIsNew,
-    setAddingNew,
-    reset,
     doSearch,
     search,
-    editMode,
-    setEditMode,
     label,
     hideAdd
   } = props;
@@ -29,7 +25,6 @@ export default function EnhancedTableToolbar(props) {
       <TextField
         fullWidth
         label="Busca"
-        disabled={editMode}
         size="small"
         value={search}
         onChange={(event) => doSearch(event.target.value)}
@@ -50,12 +45,8 @@ export default function EnhancedTableToolbar(props) {
       {!hideAdd &&
         <Tooltip>
           <IconButton
-            disabled={editMode}
             onClick={() => {
-              setEditMode(true);
               setIsNew(true);
-              setAddingNew(true);
-              reset();
             }}
           >
             <AddIcon />
@@ -68,11 +59,7 @@ export default function EnhancedTableToolbar(props) {
 
 EnhancedTableToolbar.propTypes = {
   setIsNew: PropTypes.func,
-  setAddingNew: PropTypes.func,
-  reset: PropTypes.func,
   doSearch: PropTypes.func,
   search: PropTypes.string,
-  editMode: PropTypes.bool,
-  setEditMode: PropTypes.func,
   hideAdd: PropTypes.bool,
 };

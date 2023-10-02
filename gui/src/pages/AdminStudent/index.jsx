@@ -1,6 +1,9 @@
 import { useState, useEffect } from 'react';
 import TableRow from '@mui/material/TableRow';
 import TableCell from '@mui/material/TableCell';
+import IconButton from '@mui/material/IconButton';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
 import _ from 'lodash';
 import format from 'date-fns/format';
 import parseISO from 'date-fns/parseISO';
@@ -10,6 +13,7 @@ import PageBase from '../../components/PageBase'
 
 import { API } from '../../services/connection'
 import { useUser } from '../../context/UserStore';
+
 const headCells = [
   {
     id: 'student_name',
@@ -39,6 +43,7 @@ export default function AdminStudent() {
   const [orderBy, setOrderBy] = useState('student_name');
   const [search, setSearch] = useState();
   const [filteredStudents, setFilteredStudents] = useState([]);
+  const [isNew, setIsNew] = useState(false);
 
   const getStudents = async () => {
     setLoading(true)
@@ -77,6 +82,7 @@ export default function AdminStudent() {
   useEffect(() => {
     getStudents();
   }, []);
+
   return (
     <PageBase
       loading={loading}
@@ -86,6 +92,7 @@ export default function AdminStudent() {
           label="Professores"
           search={search}
           doSearch={doSearchStudents}
+          setIsNew={setIsNew}
         />
       }
       tableHeader={
@@ -97,14 +104,28 @@ export default function AdminStudent() {
         />
       }
     >
+      {//isNew &&
+      }
       {_.map(_.orderBy(filteredStudents, orderBy, order), student => (
         <TableRow
           hover
           key={student.id}
         >
           <TableCell>{student.student_name}</TableCell>
-          <TableCell>{format(parseISO(student.student_birth_date),'dd/MM/yyyy')}</TableCell>
-          <TableCell colSpan={2}>{student.student_email}</TableCell>
+          <TableCell>{format(parseISO(student.student_birth_date), 'dd/MM/yyyy')}</TableCell>
+          <TableCell>{student.student_email}</TableCell>
+          <TableCell>
+            <IconButton
+              onClick={() => null}
+            >
+              <EditIcon />
+            </IconButton>
+            <IconButton
+              onClick={() => null}
+            >
+              <DeleteIcon />
+            </IconButton>
+          </TableCell>
         </TableRow>
       ))
       }
@@ -113,7 +134,7 @@ export default function AdminStudent() {
           hover
           key={1}
         >
-          <TableCell colSpan={4}>Nenhuma aluno encontrado</TableCell>
+          <TableCell colSpan={4}>Nenhum aluno encontrado</TableCell>
         </TableRow>
       }
     </PageBase>

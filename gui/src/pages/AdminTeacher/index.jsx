@@ -1,6 +1,9 @@
 import { useState, useEffect } from 'react';
 import TableRow from '@mui/material/TableRow';
 import TableCell from '@mui/material/TableCell';
+import IconButton from '@mui/material/IconButton';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
 import _ from 'lodash';
 import format from 'date-fns/format';
 import parseISO from 'date-fns/parseISO';
@@ -39,6 +42,7 @@ export default function AdminTeacher() {
   const [orderBy, setOrderBy] = useState('teacher_name');
   const [search, setSearch] = useState();
   const [filteredTeachers, setFilteredTeachers] = useState([]);
+  const [isNew, setIsNew] = useState(false);
 
   const getTeachers = async () => {
     setLoading(true)
@@ -86,6 +90,7 @@ export default function AdminTeacher() {
           label="Professores"
           search={search}
           doSearch={doSearchTeachers}
+          setIsNew={setIsNew}
         />
       }
       tableHeader={
@@ -97,6 +102,8 @@ export default function AdminTeacher() {
         />
       }
     >
+      {//isNew &&
+      }
       {_.map(_.orderBy(filteredTeachers, orderBy, order), teacher => (
         <TableRow
           hover
@@ -104,7 +111,19 @@ export default function AdminTeacher() {
         >
           <TableCell>{teacher.teacher_name}</TableCell>
           <TableCell>{format(parseISO(teacher.teacher_birth_date),'dd/MM/yyyy')}</TableCell>
-          <TableCell colSpan={2}>{teacher.teacher_email}</TableCell>
+          <TableCell>{teacher.teacher_email}</TableCell>
+          <TableCell>
+            <IconButton
+              onClick={() => null}
+            >
+              <EditIcon />
+            </IconButton>
+            <IconButton
+              onClick={() => null}
+            >
+              <DeleteIcon />
+            </IconButton>
+          </TableCell>
         </TableRow>
       ))
       }

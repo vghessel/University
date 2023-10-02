@@ -1,15 +1,17 @@
 import { useState, useEffect } from 'react';
 import TableRow from '@mui/material/TableRow';
 import TableCell from '@mui/material/TableCell';
+import IconButton from '@mui/material/IconButton';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
 import _ from 'lodash';
-import format from 'date-fns/format';
-import parseISO from 'date-fns/parseISO';
 import EnhancedTableToolbar from '../../components/EnhancedTableToolbar';
 import EnhachedTableHead from '../../components/EnhachedTableHead';
 import PageBase from '../../components/PageBase'
 
 import { API } from '../../services/connection'
 import { useUser } from '../../context/UserStore';
+
 const headCells = [
   {
     id: 'subject_name',
@@ -28,7 +30,7 @@ const headCells = [
     numeric: false,
     disablePadding: false,
     label: "Professor",
-  },
+  }
 ];
 export default function AdminStudent() {
   const { loggedInUser } = useUser()
@@ -40,7 +42,7 @@ export default function AdminStudent() {
   const [orderBy, setOrderBy] = useState('subject_name');
   const [search, setSearch] = useState();
   const [filteredSubjects, setFilteredSubjects] = useState([]);
-
+  const [isNew, setIsNew] = useState(false);
 
   const getTeachers = async () => {
     setLoading(true)
@@ -51,7 +53,6 @@ export default function AdminStudent() {
         }
       });
       setTeachers(data);
-      getSubjects()
     } catch (err) {
       console.warn(err)
     } finally {
@@ -66,13 +67,16 @@ export default function AdminStudent() {
           Authorization: `Bearer ${_.get(loggedInUser, 'apiKey')}`,
         }
       });
-      const dataWithTeacherName = _.map(data, item => ({
-        ...item,
-        teacher_id: item.teacher_name,
-        teacher_name: _.find(teachers, { 'id': item.teacher_name }).teacher_name
-      }))
-      setSubjects(dataWithTeacherName);
-      setFilteredSubjects(dataWithTeacherName)
+      if (!_.isEmpty(teachers)) {
+        const dataWithTeacherName = _.map(data, item => ({
+          ...item,
+          teacher_id: item.teacher_name,
+          teacher_name: _.find(teachers, { 'id': item.teacher_name }).teacher_name
+        }))
+        
+        setSubjects(dataWithTeacherName);
+        setFilteredSubjects(dataWithTeacherName)
+      }
     } catch (err) {
       console.warn(err)
     } finally {
@@ -100,6 +104,10 @@ export default function AdminStudent() {
   useEffect(() => {
     getTeachers();
   }, []);
+
+  useEffect(() => {
+    getSubjects();
+  }, [teachers]);
   return (
     <PageBase
       loading={loading}
@@ -109,6 +117,7 @@ export default function AdminStudent() {
           label="Matérias"
           search={search}
           doSearch={doSearchSubjects}
+          setIsNew={setIsNew}
         />
       }
       tableHeader={
@@ -120,6 +129,8 @@ export default function AdminStudent() {
         />
       }
     >
+      {//isNew &&
+      }
       {_.map(_.orderBy(filteredSubjects, orderBy, order), subject => (
         <TableRow
           hover
@@ -128,6 +139,18 @@ export default function AdminStudent() {
           <TableCell>{subject.subject_name}</TableCell>
           <TableCell>{subject.subject_workload}</TableCell>
           <TableCell>{subject.teacher_name}</TableCell>
+          <TableCell>
+            <IconButton
+              onClick={() => null}
+            >
+              <EditIcon />
+            </IconButton>
+            <IconButton
+              onClick={() => null}
+            >
+              <DeleteIcon />
+            </IconButton>
+          </TableCell>
         </TableRow>
       ))
       }

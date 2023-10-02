@@ -10,25 +10,25 @@ import { API } from '../../services/connection'
 import { useUser } from '../../context/UserStore';
 const headCells = [
   {
-    id: 'description',
+    id: 'subject_name',
     numeric: false,
     disablePadding: false,
     label: "Matérias",
   },
   {
-    id: 'professor',
+    id: 'teacher_name',
     numeric: false,
     disablePadding: false,
     label: 'Professor',
   },
   {
-    id: 'load',
+    id: 'subject_workload',
     numeric: true,
     disablePadding: false,
     label: 'Carga horária',
   },
   {
-    id: 'nota',
+    id: 'grade',
     numeric: true,
     disablePadding: false,
     label: 'Nota',
@@ -39,6 +39,11 @@ export default function Student() {
   const [ subjects, setSubjects ] = useState([])
   const [ loading, setLoading ] = useState(true)
 
+  const [order, setOrder] = useState('asc');
+  const [orderBy, setOrderBy] = useState('subject_name');
+  const [search, setSearch] = useState();
+  const [filteredSubjects, setFilteredSubjects] = useState([]);
+
   const getSubjects = async () => {
     setLoading(true)
     try {
@@ -48,32 +53,57 @@ export default function Student() {
         }
       });
       setSubjects(data);
+      setFilteredSubjects(data.grades)
     } catch (err) {
       console.warn(err)
     } finally {
       setLoading(false);
     }
   }
+  const doSearchSubjects = (text) => {
+    setSearch(text);
+    const filtered = _.filter(
+      _.get(subjects, 'grades', []),
+      (subject) =>
+        _.toLower(subject.subject_name).includes(_.toLower(text)) ||
+        _.toLower(subject.teacher_name).includes(_.toLower(text))
+    );
+    setFilteredSubjects(filtered);
+  };
+
+  const doSort = (event, newOrderBy) => {
+    const isAsc = orderBy === newOrderBy && order === 'asc';
+    const toggledOrder = isAsc ? 'desc' : 'asc';
+    setOrder(toggledOrder);
+    setOrderBy(newOrderBy);
+  };
 
   useEffect(() => {
     getSubjects();
   }, []);
+
   return (
     <PageBase
       loading={loading}
-      toolBar={<EnhancedTableToolbar label="Notas" hideAdd />}
+      toolBar={
+        <EnhancedTableToolbar
+          label="Notas"
+          search={search}
+          doSearch={doSearchSubjects}
+          hideAdd
+        />
+      }
       tableHeader={
         <EnhachedTableHead
-          order={'order'}
-          orderBy={'orderBy'}
-          rowCount={0}
-          onRequestSort={() => null}
+          order={order}
+          orderBy={orderBy}
+          onRequestSort={doSort}
           headCells={headCells}
           noActions
         />
       }
     >
-      {_.map(_.get(subjects, 'grades', []), subject => (
+      {_.map(_.orderBy(filteredSubjects, orderBy, order), subject => (
         <TableRow
           hover
           key={subject.id}
@@ -85,7 +115,7 @@ export default function Student() {
         </TableRow>
       ))
       }
-      {_.get(subjects, 'grades', []).length === 0 &&
+      {(filteredSubjects || []).length === 0 &&
         <TableRow
           hover
           key={1}

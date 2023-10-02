@@ -41,9 +41,20 @@ export default () => {
 
     try {
       const { data } = await API.post("/login/", payload)
+      let userIdLocation = 'user_id'
+      const level = _.get(data, 'groups[0].id', 1)
+      switch(level) {
+        case 1:
+          userIdLocation = 'student.id'
+          break
+        case 2:
+          userIdLocation = 'teacher.id'
+          break
+        default:
+      }
       const user = {
-        level: _.get(data,'groups[0].id', 1),
-        id: data.user_id,
+        level: level,
+        id: _.get(data, userIdLocation),
         name: data.name,
         apiKey: data.access_token,
         loggedIn: true

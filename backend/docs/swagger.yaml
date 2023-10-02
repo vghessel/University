@@ -75,8 +75,6 @@ paths:
                 $ref: '#/components/schemas/Student'          
         '405':
           description: Invalid input
-    
-  
   /student/{studentId}:
     get:
       tags:

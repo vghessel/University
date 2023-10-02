@@ -1,4 +1,3 @@
-import LogoHeader from './LogoHeader'
 import Logo from './Logo'
 
 export const theme = {
@@ -35,6 +34,5 @@ export const COLORS = {
 }
 
 export {
-  LogoHeader,
   Logo
 }

@@ -7,7 +7,7 @@ import _ from 'lodash'
 import styled from "styled-components";
 
 import { useUser } from '../../context/UserStore';
-import { LogoHeader } from '../../assets/theme';
+import { Logo } from '../../assets/theme';
 
 const Title = styled.div`
   width: 100% ;
@@ -32,7 +32,7 @@ export default function NavBar() {
   return (
     <AppBar position="fixed" color="primary" className={classes.appBar}>
       <Toolbar>
-        <LogoHeader
+        <Logo
           height="34px"
           style={{
             paddingRight: '24px',

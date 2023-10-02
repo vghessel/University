@@ -16,12 +16,12 @@ const theme = createTheme(importedTheme);
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <BrowserRouter basename="/">
-      <StyledEngineProvider injectFirst>
-        <ThemeProvider theme={theme}>
-          <Providers>
-            <App />
-          </Providers>
-        </ThemeProvider>
-      </StyledEngineProvider>
+    <StyledEngineProvider injectFirst>
+      <ThemeProvider theme={theme}>
+        <Providers>
+          <App />
+        </Providers>
+      </ThemeProvider>
+    </StyledEngineProvider>
   </BrowserRouter>
 );

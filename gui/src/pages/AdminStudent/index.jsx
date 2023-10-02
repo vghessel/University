@@ -134,7 +134,7 @@ export default function AdminStudent() {
       removePadding
       toolBar={
         <EnhancedTableToolbar
-          label="Professores"
+          label="Alunos"
           search={search}
           doSearch={doSearchStudents}
           setIsNew={() => setIsNew({

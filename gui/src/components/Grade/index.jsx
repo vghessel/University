@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import TextField from '@mui/material/TextField';
 
-export default function Grade({ initialValue }) {
+export default function Grade({ initialValue, grade, handlerChange }) {
   const [isEditing, setIsEditing] = useState(false);
   const [value, setValue] = useState(initialValue);
 
@@ -11,6 +11,7 @@ export default function Grade({ initialValue }) {
 
   const handleBlur = () => {
     setIsEditing(false);
+    handlerChange(grade, parseFloat(value, 10))
   };
 
   const handleChange = (e) => {

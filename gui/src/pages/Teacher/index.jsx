@@ -68,6 +68,25 @@ export default function Teacher() {
     setOrderBy(newOrderBy);
   };
 
+  const doUpdateGrade = async (grade, gradeValue) => {
+    const gradeObject = {
+      id: grade.id,
+      grade: gradeValue,
+      subject_name: _.get(subjects, 'subject.id', 0),
+      student_name: grade.student_id
+    }
+    await API.get('/grade/', {
+      headers: {
+        Authorization: `Bearer ${_.get(loggedInUser, 'apiKey')}`,
+      }
+    })
+    await API.put(`/grade/${grade.id}/`, gradeObject, {
+      headers: {
+        Authorization: `Bearer ${_.get(loggedInUser, 'apiKey')}`,
+      }
+    })
+  }
+
   useEffect(() => {
     getSubjects();
   }, []);
@@ -100,7 +119,11 @@ export default function Teacher() {
           >
             <TableCell>{student.student_name}</TableCell>
             <TableCell style={{ width: '100px' }}>
-              <Grade initialValue={parseFloat(student.grade, 10)} />
+              <Grade
+                initialValue={parseFloat(student.grade, 10)}
+                grade={student}
+                handlerChange={doUpdateGrade}
+              />
             </TableCell>
           </TableRow>
         ))

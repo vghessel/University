@@ -8,8 +8,8 @@ import { API } from '../../services/connection'
 const ROTAS = ['/', '/student', '/teacher', '/admin']
 
 export default () => {
-  const [username, setUsername] = useState('v@gmail.com')
-  const [password, setPassword] = useState('1234')
+  const [username, setUsername] = useState('admin')
+  const [password, setPassword] = useState('admin')
 
   const [errorInLogin, setErrorInLogin] = useState('')
 
@@ -42,20 +42,23 @@ export default () => {
     try {
       const { data } = await API.post("/login/", payload)
       let userIdLocation = 'user_id'
+      let userNameLocation = 'name'
       const level = _.get(data, 'groups[0].id', 1)
       switch(level) {
         case 1:
           userIdLocation = 'student.id'
+          userNameLocation = 'student.student_name'
           break
         case 2:
           userIdLocation = 'teacher.id'
+          userNameLocation = 'teacher.teacher_name'
           break
         default:
       }
       const user = {
         level: level,
         id: _.get(data, userIdLocation),
-        name: data.name,
+        name: _.get(data, userNameLocation),
         apiKey: data.access_token,
         loggedIn: true
       }

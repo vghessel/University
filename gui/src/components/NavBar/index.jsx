@@ -41,7 +41,7 @@ export default function NavBar() {
           }}
         />
         <Title>
-          <p className='title'>Bem vindo à Universidade Delloite, <em>{_.get(loggedInUser, 'name', 'Person')}</em></p>
+          <p className='title'>Bem vindo à Universidade Delloite, <em>{_.get(loggedInUser, 'name', 'Coordenador')}</em></p>
         </Title>
         <Button style={{ margin: '0 24px' }} variant='outlined' color='secondary' onClick={logout}>
           <LogoutIcon  />

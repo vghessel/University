@@ -80,3 +80,11 @@ class StudentDetailSerializer(serializers.ModelSerializer):
 
 
 
+# Serialize subject and students and their grades
+class SubjectStudentsSerializer(serializers.ModelSerializer):
+    student_name = serializers.CharField(source='student_name.student_name')
+    grade_id = serializers.CharField(source='id')
+
+    class Meta:
+        model = Grade
+        fields = ['student_name', 'grade', 'grade_id']

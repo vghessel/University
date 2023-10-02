@@ -13,7 +13,8 @@ from .serializers import (
     SubjectSerializer, 
     GradeSerializer,
     StudentDetailSerializer, 
-    TeacherDetailSerializer)
+    TeacherDetailSerializer,
+    SubjectStudentsSerializer)
 
 
 ## JSON Web Token View ##
@@ -178,3 +179,15 @@ class TeacherDetailView(generics.RetrieveAPIView):
     permission_classes = [IsAuthenticated]
     queryset = Teacher.objects.all()
     serializer_class = TeacherDetailSerializer
+
+
+## Get subject and students and their grades ##
+class SubjectStudentsAPIView(generics.RetrieveAPIView):
+    queryset = Subject.objects.all()
+    serializer_class = GradeSerializer
+
+    def retrieve(self, request, *args, **kwargs):
+        subject = self.get_object()
+        grades = Grade.objects.filter(subject_name=subject)
+        serializer = self.get_serializer(grades, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)

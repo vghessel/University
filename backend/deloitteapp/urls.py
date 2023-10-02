@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.urls import path, include
-from .views import StudentSubjectsGradesAPIView, CustomLoginView
+from .views import StudentSubjectsGradesAPIView, CustomLoginView, SubjectStudentsAPIView
 from . import views
 
 urlpatterns = [
@@ -29,5 +29,8 @@ urlpatterns = [
 
     # Get a teacher's subjects and students
     path('teacher/<int:pk>/subjects/', views.TeacherDetailView.as_view(), name='teacher-detail'),
+
+    # Get subject and students and their grades
+    path('subject/<int:pk>/students/', SubjectStudentsAPIView.as_view(), name='subject-students'),
 
 ]

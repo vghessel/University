@@ -34,13 +34,17 @@ class StudentTeacherSerializer(serializers.ModelSerializer):
 
 class GradeTeacherSerializer(serializers.ModelSerializer):
     student_name = serializers.SerializerMethodField()
+    student_id = serializers.SerializerMethodField()
 
     def get_student_name(self, obj):
         return obj.student_name.student_name
+    
+    def get_student_id(self, obj):
+        return obj.student_name.id
 
     class Meta:
         model = Grade
-        fields = ['id', 'student_name', 'grade']
+        fields = ['id', 'student_id', 'student_name', 'grade']
 
 class SubjectDetailSerializer(serializers.ModelSerializer):
     students = GradeTeacherSerializer(many=True, source='grade_set')

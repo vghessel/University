@@ -26,7 +26,7 @@ export default function PageBase(props) {
           }
           {!loading && 
             <TableContainer>
-              <Table>
+              <Table stickyHeader>
                 {tableHeader}
                 <TableBody>
                   {children}

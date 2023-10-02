@@ -4,6 +4,7 @@ import TableCell from '@mui/material/TableCell';
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
+import Tooltip from '@mui/material/Tooltip';
 import _ from 'lodash';
 import format from 'date-fns/format';
 import parseISO from 'date-fns/parseISO';
@@ -170,24 +171,28 @@ export default function AdminTeacher() {
           key={teacher.id}
         >
           <TableCell>{teacher.teacher_name}</TableCell>
-          <TableCell>{format(parseISO(teacher.teacher_birth_date),'dd/MM/yyyy')}</TableCell>
+          <TableCell>{format(parseISO(teacher.teacher_birth_date), 'dd/MM/yyyy')}</TableCell>
           <TableCell>{teacher.teacher_email}</TableCell>
           <TableCell>
-            <IconButton
-              onClick={() => setIsNew({
-                id: teacher.id,
-                name: teacher.teacher_name,
-                email: teacher.teacher_email,
-                birth_date: parseISO(teacher.teacher_birth_date)
-              })}
-            >
-              <EditIcon />
-            </IconButton>
-            <IconButton
-              onClick={() => setDeleteItem(teacher)}
-            >
-              <DeleteIcon />
-            </IconButton>
+            <Tooltip title="Editar Professor">
+              <IconButton
+                onClick={() => setIsNew({
+                  id: teacher.id,
+                  name: teacher.teacher_name,
+                  email: teacher.teacher_email,
+                  birth_date: parseISO(teacher.teacher_birth_date)
+                })}
+              >
+                <EditIcon />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Remover Professor">
+              <IconButton
+                onClick={() => setDeleteItem(teacher)}
+              >
+                <DeleteIcon />
+              </IconButton>
+            </Tooltip>
           </TableCell>
         </TableRow>
       ))

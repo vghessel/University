@@ -45,6 +45,7 @@ export default function PersonForm({ title, handleClose, data, onSave }) {
           </Grid>
           <Grid item xs={6}>
             <TextField
+              disabled={!!inputData.id}
               label="E-mail"
               fullWidth
               value={inputData.email}

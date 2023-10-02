@@ -22,7 +22,7 @@ export default function Grade({ initialValue, grade, handlerChange }) {
     <div onDoubleClick={handleDoubleClick} onBlur={handleBlur}>
       {isEditing ? (
         <TextField
-          value={value}
+          value={value || ''}
           onChange={handleChange}
           fullWidth
           autoFocus

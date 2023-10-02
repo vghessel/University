@@ -10,32 +10,9 @@ import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 
+export default function SubjectForm({ teachers, handleClose, data, onSave }) {
 
-import { API } from '../../services/connection'
-import { useUser } from '../../context/UserStore';
-
-export default function SubjectForm({ title, handleClose, data, onSave }) {
-
-  const { loggedInUser } = useUser()
   const [inputData, setInputData] = useState(data)
-  const [teachers, setTeachers] = useState([])
-
-  const getTeachers = async () => {
-    try {
-      const { data } = await API.get('/teacher/', {
-        headers: {
-          Authorization: `Bearer ${_.get(loggedInUser, 'apiKey')}`,
-        }
-      });
-      setTeachers(data);
-    } catch (err) {
-      console.warn(err)
-    }
-  }
-
-  useEffect(() => {
-    getTeachers();
-  }, []);
   return (
     <Dialog open maxWidth="md" fullWidth>
       <DialogTitle>
@@ -98,6 +75,7 @@ export default function SubjectForm({ title, handleClose, data, onSave }) {
 }
 
 SubjectForm.propTypes = {
+  teachers: PropTypes.array,
   handleClose: PropTypes.func,
   data: PropTypes.object,
   onSave: PropTypes.func

@@ -4,11 +4,14 @@ import TableCell from '@mui/material/TableCell';
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
+import GroupsIcon from '@mui/icons-material/Groups';
+import Tooltip from '@mui/material/Tooltip';
 import _ from 'lodash';
 import EnhancedTableToolbar from '../../components/EnhancedTableToolbar';
 import EnhachedTableHead from '../../components/EnhachedTableHead';
 import PageBase from '../../components/PageBase';
 import SubjectForm from '../../components/SubjectForm';
+import SubjectStudentList from '../../components/SubjectStudentList';
 import DeleteConfirmation from '../../components/DeleteConfirmation';
 
 import { API } from '../../services/connection'
@@ -38,6 +41,7 @@ export default function AdminStudent() {
   const { loggedInUser } = useUser()
   const [subjects, setSubjects] = useState([])
   const [teachers, setTeachers] = useState([])
+  const [students, setStudents] = useState([])
   const [loading, setLoading] = useState(true)
 
   const [order, setOrder] = useState('asc');
@@ -46,6 +50,23 @@ export default function AdminStudent() {
   const [filteredSubjects, setFilteredSubjects] = useState([]);
   const [isNew, setIsNew] = useState(false);
   const [deleteItem, setDeleteItem] = useState(null);
+  const [studentsEdit, setStudentsEdit] = useState(null);
+
+  const getStudents = async () => {
+    setLoading(true)
+    try {
+      const { data } = await API.get('/student/', {
+        headers: {
+          Authorization: `Bearer ${_.get(loggedInUser, 'apiKey')}`,
+        }
+      });
+      setStudents(data);
+    } catch (err) {
+      console.warn(err)
+    } finally {
+      setLoading(false);
+    }
+  }
 
   const getTeachers = async () => {
     setLoading(true)
@@ -146,8 +167,12 @@ export default function AdminStudent() {
   };
 
   useEffect(() => {
-    getTeachers();
+    getStudents();
   }, []);
+
+  useEffect(() => {
+    getTeachers();
+  }, [students]);
 
   useEffect(() => {
     getSubjects();
@@ -180,6 +205,14 @@ export default function AdminStudent() {
           handleClose={() => setIsNew(null)}
           data={isNew}
           onSave={saveSubjects}
+          teachers={teachers}
+        />
+      }
+      {studentsEdit &&
+        <SubjectStudentList
+          handleClose={() => setStudentsEdit(null)}
+          data={studentsEdit}
+          students={_.map(students, i => ({...i, label: i.student_name}))}
         />
       }
       {deleteItem &&
@@ -198,21 +231,35 @@ export default function AdminStudent() {
           <TableCell>{subject.subject_workload}</TableCell>
           <TableCell>{subject.teacher_name}</TableCell>
           <TableCell>
-            <IconButton
-               onClick={() => setIsNew({
-                id: subject.id,
-                name: subject.subject_name,
-                workload: subject.subject_workload,
-                teacher_id: subject.teacher_id
-              })}
-            >
-              <EditIcon />
-            </IconButton>
-            <IconButton
-              onClick={() => setDeleteItem(subject)}
-            >
-              <DeleteIcon />
-            </IconButton>
+            <Tooltip title="Editar Matéria">
+              <IconButton
+                onClick={() => setIsNew({
+                  id: subject.id,
+                  name: subject.subject_name,
+                  workload: subject.subject_workload,
+                  teacher_id: subject.teacher_id
+                })}
+              >
+                <EditIcon />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Lista de Estudantes">
+              <IconButton
+                onClick={() => setStudentsEdit({
+                  id: subject.id,
+                  subject_name: subject.subject_name
+                })}
+              >
+                <GroupsIcon />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Remover Matéria">
+              <IconButton
+                onClick={() => setDeleteItem(subject)}
+              >
+                <DeleteIcon />
+              </IconButton>
+            </Tooltip>
           </TableCell>
         </TableRow>
       ))

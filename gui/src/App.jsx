@@ -2,6 +2,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import _ from 'lodash';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { ptBR } from 'date-fns/locale';
 
 import Student from './pages/Student';
 import Teacher from './pages/Teacher';
@@ -14,7 +15,7 @@ function App() {
   const { loggedInUser } = useUser();
   const loggedIn = _.get(loggedInUser, 'loggedIn', false)
   return (
-    <LocalizationProvider dateAdapter={AdapterDateFns}>
+    <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={ptBR}>
       {loggedIn ? (
         <div>
           <Navbar />

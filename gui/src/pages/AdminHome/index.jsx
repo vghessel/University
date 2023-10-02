@@ -8,6 +8,9 @@ import School from '@mui/icons-material/School';
 import LocalLibrary from '@mui/icons-material/LocalLibrary';
 import Article from '@mui/icons-material/Article';
 
+import AdminSubject from '../AdminSubject';
+import AdminTeacher from '../AdminTeacher';
+import AdminStudent from '../AdminStudent';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -50,15 +53,10 @@ export default function AdminHome() {
           index={value}
           onChangeIndex={handleChangeIndex}
         >
-          <TabPanel value={value} index={0}>
-            Matérias
-          </TabPanel>
-          <TabPanel value={value} index={1}>
-            Professores
-          </TabPanel>
-          <TabPanel value={value} index={2}>
-            Alunos
-          </TabPanel>
+
+          <AdminSubject index={1} />
+          <AdminTeacher index={1} />
+          <AdminStudent index={1} />
         </SwipeableViews>
       </Box>
     </div>

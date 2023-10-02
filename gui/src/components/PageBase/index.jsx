@@ -12,9 +12,10 @@ export default function PageBase(props) {
     tableHeader,
     children,
     loading,
+    removePadding,
   } = props
   return (
-    <div style={{ paddingTop: '74px', paddingLeft: '10px', paddingRight: '10px' }}>
+    <div style={removePadding ? {} : { paddingTop: '74px', paddingLeft: '10px', paddingRight: '10px' }}>
       <Box>
         <Paper>
           {toolBar}
@@ -44,4 +45,5 @@ PageBase.propTypes = {
   tableHeader: PropTypes.node,
   children: PropTypes.any,
   loading: PropTypes.bool,
+  removePadding: PropTypes.bool
 };

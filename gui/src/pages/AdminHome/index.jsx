@@ -54,9 +54,9 @@ export default function AdminHome() {
           onChangeIndex={handleChangeIndex}
         >
 
-          <AdminSubject index={1} />
-          <AdminTeacher index={1} />
-          <AdminStudent index={1} />
+          <AdminSubject index={0} oldIndex={value} />
+          <AdminTeacher index={1} oldIndex={value} />
+          <AdminStudent index={2} oldIndex={value} />
         </SwipeableViews>
       </Box>
     </div>

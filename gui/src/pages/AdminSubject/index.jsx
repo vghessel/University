@@ -37,7 +37,7 @@ const headCells = [
     label: "Professor",
   }
 ];
-export default function AdminStudent() {
+export default function AdminStudent({oldIndex}) {
   const { loggedInUser } = useUser()
   const [subjects, setSubjects] = useState([])
   const [teachers, setTeachers] = useState([])
@@ -168,7 +168,7 @@ export default function AdminStudent() {
 
   useEffect(() => {
     getStudents();
-  }, []);
+  }, [oldIndex]);
 
   useEffect(() => {
     getTeachers();
@@ -177,6 +177,7 @@ export default function AdminStudent() {
   useEffect(() => {
     getSubjects();
   }, [teachers]);
+
   return (
     <PageBase
       loading={loading}

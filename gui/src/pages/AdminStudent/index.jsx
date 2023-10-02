@@ -128,7 +128,6 @@ export default function AdminStudent() {
   useEffect(() => {
     getStudents();
   }, []);
-  console.warn('delete', deleteItem)
   return (
     <PageBase
       loading={loading}

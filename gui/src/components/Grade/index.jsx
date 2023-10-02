@@ -30,7 +30,7 @@ export default function Grade({ initialValue, grade, handlerChange }) {
           type="number"
         />
       ) : (
-        <span>{value}</span>
+        <span>{value || ''}</span>
       )}
     </div>
   );
